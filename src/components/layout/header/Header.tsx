@@ -13,12 +13,14 @@ interface HeaderProps {
 
 export function Header({ isSideBarOpen, setIsSideBarOpen }: HeaderProps) {
   const loginState = LoginStateStore((state) => state.loginState)
+  const accessToken = AuthStateStore((state) => state.accessToken)
+  const isLoggedIn = loginState === 'USER' || !!accessToken
+
   const handleSideBar = () => {
     setIsSideBarOpen(!isSideBarOpen)
   }
 
   // API 연결 시 임시 버튼
-  const accessToken = AuthStateStore((state) => state.accessToken)
 
   const handleDevLogin = async () => {
     const token = await devLogin(
@@ -64,9 +66,9 @@ export function Header({ isSideBarOpen, setIsSideBarOpen }: HeaderProps) {
           </button>
         )}
         {/* 로그인 하지 않았을때의 UI */}
-        {loginState === 'GUEST' && <Guest />}
+        {!isLoggedIn && <Guest />}
         {/* 로그인 했을때 UI */}
-        {loginState === 'USER' && <User />}
+        {isLoggedIn && <User />}
       </div>
     </div>
   )

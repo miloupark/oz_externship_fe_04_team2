@@ -58,6 +58,7 @@ export function StudyDetailPage() {
       {/* 상단 히어로 */}
       <StudyDetailHero
         group={group}
+        currentUserId={currentUserId}
         onClickEdit={handleClickEdit}
         onClickLeave={handleClickLeave}
       />
