@@ -20,7 +20,7 @@ export function StudyCard({ study }: StudyCardProps) {
   return (
     <div className="border-custom-gray-200 flex h-[600px] flex-col overflow-hidden rounded-xl border bg-white shadow-sm transition-all hover:shadow-md">
       <StudyCardThumbnail
-        image={study.profile_img_url || '/placeholder.png'}
+        image={study.profile_img_url || '/defaultUser.svg'}
         name={study.name}
         statusBadge={
           study.status === 'PENDING'
