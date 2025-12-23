@@ -6,28 +6,23 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout develop
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: develop
 
-      - name: Configure git author
+      - name: Add upstream and fetch
         run: |
-          git config user.name "miloupark"
-          git config user.email "${{ secrets.EMAIL }}"
+          git remote add upstream https://github.com/OZ-Coding-School/oz_externship_fe_04_team2.git
+          git fetch upstream develop
+          git checkout develop
+          git rebase upstream/develop
 
-      - name: Add remote-url (token auth)
+      - name: Push to fork (this repo)
+        env:
+         TOKEN: ${{ secrets.ACCESS_TOKEN }}
         run: |
-          git remote add forked-repo "https://x-access-token:${{ secrets.ACCESS_TOKEN }}@github.com/miloupark/oz_externship_fe_04_team2.git"
-
-      - name: Push changes to forked-repo
-        run: |
-          git push --force-with-lease forked-repo develop
-
-      - name: Clean up
-        if: always()
-        run: |
-          git remote remove forked-repo
+          git push --force-with-lease \
+            "https://x-access-token:${TOKEN}@github.com/miloupark/oz_externship_fe_04_team2.git" \
+            develop:develop
