@@ -4,6 +4,7 @@ import { useAutoScrollToBottom } from '@/hooks'
 import { useChatMessageScroll } from '@/hooks/chat/useChatMessageScroll'
 import type { ChatMessage } from '@/types'
 import { Loader2 } from 'lucide-react'
+import { useEffect, useRef } from 'react'
 
 interface ChatMessageListProps {
   messages: ChatMessage[]
@@ -20,6 +21,9 @@ export function ChatMessageList({
   hasMore,
   isLoadingMore,
 }: ChatMessageListProps) {
+  const prevMessagesLength = useRef(messages.length)
+  const lastMessageIdRef = useRef<number | undefined>(undefined)
+
   const { containerRef, isAtBottom, scrollToBottom, bottomRef } =
     useAutoScrollToBottom(messages.length, {
       onlyIfAtBottom: true,
@@ -38,6 +42,40 @@ export function ChatMessageList({
       topThreshold: 20,
     }
   )
+
+  // 새 메시지 감지
+  useEffect(() => {
+    const lastMessage = messages[messages.length - 1]
+    const currentLastId = lastMessage?.id
+    const prevLastId = lastMessageIdRef.current
+
+    // 마지막 메시지 ID가 변경되지 않았으면 무시
+    if (currentLastId === prevLastId) {
+      prevMessagesLength.current = messages.length
+      return
+    }
+
+    // 초기 로딩이면 무시
+    if (prevLastId === undefined) {
+      lastMessageIdRef.current = currentLastId
+      prevMessagesLength.current = messages.length
+      return
+    }
+
+    // 새 메시지일 때만 스크롤 처리
+    if (lastMessage?.sender?.id === currentUserId) {
+      setTimeout(() => {
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+      }, 50)
+    } else if (isAtBottom()) {
+      setTimeout(() => {
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+      }, 50)
+    }
+
+    lastMessageIdRef.current = currentLastId
+    prevMessagesLength.current = messages.length
+  }, [messages, currentUserId, bottomRef, isAtBottom])
 
   return (
     <div

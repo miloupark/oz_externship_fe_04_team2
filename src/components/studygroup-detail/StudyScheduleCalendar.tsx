@@ -6,9 +6,10 @@ import {
   ScheduleEditModal,
 } from '@/components/studygroup-detail/modal'
 import {
-  useDeleteStudySchedule,
+  useStudyScheduleDetail,
   useStudySchedules,
 } from '@/hooks/study-schedule'
+import { useDeleteStudySchedule } from '@/hooks/study-schedule/useDeleteStudySchedule'
 import type { StudyGroupMemberType, StudyScheduleDetailType } from '@/types'
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
@@ -25,30 +26,33 @@ export function StudyScheduleCalendar({
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [isDetailOpen, setIsDetailOpen] = useState(false)
   const [isEditOpen, setIsEditOpen] = useState(false)
-  const [selectedSchedule, setSelectedSchedule] =
-    useState<StudyScheduleDetailType | null>(null)
+  const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
+    null
+  )
 
   const { data: schedules } = useStudySchedules(groupId)
   const { mutate: deleteSchedule } = useDeleteStudySchedule(groupId)
 
-  const handleOpenCreateModal = () => {
-    setIsCreateOpen(true)
-  }
-  const handleCloseCreateModal = () => {
-    setIsCreateOpen(false)
-  }
+  const { data: selectedSchedule } = useStudyScheduleDetail(
+    groupId,
+    selectedScheduleId,
+    isDetailOpen
+  )
 
-  const handleScheduleClick = (schedule: StudyScheduleDetailType) => {
-    setSelectedSchedule(schedule)
+  const handleOpenCreateModal = () => setIsCreateOpen(true)
+  const handleCloseCreateModal = () => setIsCreateOpen(false)
+
+  const handleScheduleClick = (scheduleId: number) => {
+    setSelectedScheduleId(scheduleId)
     setIsDetailOpen(true)
   }
 
   const handleCloseDetailModal = () => {
     setIsDetailOpen(false)
+    setSelectedScheduleId(null)
   }
 
-  const handleEditSchedule = (schedule: StudyScheduleDetailType) => {
-    setSelectedSchedule(schedule)
+  const handleEditSchedule = (_schedule: StudyScheduleDetailType) => {
     setIsDetailOpen(false)
     setIsEditOpen(true)
   }
@@ -57,7 +61,8 @@ export function StudyScheduleCalendar({
     deleteSchedule(scheduleId, {
       onSuccess: () => {
         setIsDetailOpen(false)
-        setSelectedSchedule(null)
+        setIsEditOpen(false)
+        setSelectedScheduleId(null)
       },
     })
   }
@@ -67,8 +72,7 @@ export function StudyScheduleCalendar({
     setIsDetailOpen(true)
   }
 
-  const handleSaveEditedSchedule = (updated: StudyScheduleDetailType) => {
-    setSelectedSchedule(updated)
+  const handleSaveEditedSchedule = (_updated: StudyScheduleDetailType) => {
     setIsEditOpen(false)
     setIsDetailOpen(true)
   }

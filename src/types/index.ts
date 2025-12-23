@@ -1,4 +1,5 @@
 export * from './chat'
+export * from './notification'
 export * from './studygroup'
 export * from './studygroup-detail'
 export * from './study-schedule'

@@ -9,8 +9,8 @@ export function useChatRooms() {
     queryKey: ['chatRooms'],
     queryFn: () => fetchChatRooms({ page_size: 10 }),
     enabled: isOpen,
-    refetchInterval: isOpen ? 30000 : false,
-    staleTime: 10000,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
   })
 
   return {

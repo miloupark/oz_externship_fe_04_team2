@@ -21,7 +21,7 @@ export function ChatParticipants({ members }: ChatParticipantsProps) {
         {members.map((member) => (
           <li
             key={member.id}
-            className="bg-custom-gray-50 flex items-center gap-1 rounded-full px-2 py-1 shadow-xs"
+            className="bg-custom-gray-50 flex shrink-0 items-center gap-1 rounded-full px-2 py-1 shadow-xs"
           >
             <span
               className={

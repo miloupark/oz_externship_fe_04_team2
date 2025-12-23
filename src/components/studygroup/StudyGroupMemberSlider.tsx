@@ -116,7 +116,7 @@ export function StudyGroupMemberSlider() {
                     <span>10명</span>
                   </div>
                 </div>
-                <div className="flex min-w-[60px] items-center gap-2 pb-6">
+                <div className="flex min-w-15 items-center gap-2 pb-6">
                   <Users className="text-custom-gray-400 h-5 w-5" />
                   <span className="text-custom-gray-900 text-xl font-bold">
                     {field.value}

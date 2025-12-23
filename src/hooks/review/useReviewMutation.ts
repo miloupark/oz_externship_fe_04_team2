@@ -4,6 +4,15 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 export function useReviewMutation(studyId: number) {
   const queryClient = useQueryClient()
 
+  const REVIEW_KEYS = {
+    list: () => ['studyReviews'],
+    detail: (studyId: number) => ['studyReview', studyId],
+  }
+
+  const STUDY_KEYS = {
+    list: () => ['studyGroups'],
+  }
+
   return useMutation({
     mutationFn: async ({
       reviewId,
@@ -21,9 +30,9 @@ export function useReviewMutation(studyId: number) {
     },
 
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['studyReviews', studyId],
-      })
+      queryClient.invalidateQueries({ queryKey: REVIEW_KEYS.list() })
+      queryClient.invalidateQueries({ queryKey: REVIEW_KEYS.detail(studyId) })
+      queryClient.invalidateQueries({ queryKey: STUDY_KEYS.list() })
     },
   })
 }

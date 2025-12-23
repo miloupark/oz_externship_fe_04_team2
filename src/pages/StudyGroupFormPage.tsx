@@ -15,6 +15,7 @@ import { studyGroupSchema, type StudyGroupForm } from '@/schema'
 import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router'
+import { showToast } from '@/lib'
 
 export function StudyGroupFormPage() {
   const navigate = useNavigate()
@@ -30,6 +31,7 @@ export function StudyGroupFormPage() {
       end_at: '',
       max_headcount: 2,
       profile_img_url: '',
+      profile_image_file: undefined,
       lectures: [],
     },
   })
@@ -58,13 +60,21 @@ export function StudyGroupFormPage() {
     groupId!
   )
 
-  const onSubmit = methods.handleSubmit((formData) => {
-    if (isEdit) {
-      updateStudy(formData)
-    } else {
-      createStudy(formData)
+  const onSubmit = methods.handleSubmit(
+    (formData) => {
+      if (isEdit) {
+        updateStudy(formData)
+      } else {
+        createStudy(formData)
+      }
+    },
+    (errors) => {
+      const firstError = Object.values(errors)[0]
+      if (firstError?.message) {
+        showToast.error('입력 오류', firstError.message)
+      }
     }
-  })
+  )
 
   return (
     <FormProvider {...methods}>

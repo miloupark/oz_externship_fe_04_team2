@@ -6,19 +6,17 @@ import {
   StudyGroupSearchInput,
   StudySection,
 } from '@/components/studygroup'
+import { useStudyGroups } from '@/hooks/study-group/useStudyGroups'
 import { useStudyGroupStore } from '@/store'
 import { Plus } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router'
 
 export function StudyGroupPage() {
-  const { studies, selectedStudy, modal, fetchStudies, isLoading } =
-    useStudyGroupStore()
-  const [searchTerm, setSearchTerm] = useState('')
+  const { data: studies = [], isLoading } = useStudyGroups()
+  const { selectedStudy, modal } = useStudyGroupStore()
 
-  useEffect(() => {
-    fetchStudies()
-  }, [fetchStudies])
+  const [searchTerm, setSearchTerm] = useState('')
 
   const filteredStudies = studies.filter((s) =>
     s.name.toLowerCase().includes(searchTerm.toLowerCase())

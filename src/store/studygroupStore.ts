@@ -1,12 +1,20 @@
 import { create } from 'zustand'
 import type { StudyGroupResponseType, StudyGroupReviewType } from '@/types'
+import type { ApiError } from '@/utils'
+import { getStudyGroups } from '@/api'
 
 interface StudyGroupState {
+  studies: StudyGroupResponseType[]
   selectedStudy: StudyGroupResponseType | null
-  selectedReview: StudyGroupReviewType | null
   modal: 'none' | 'list' | 'edit'
+  reviews: StudyGroupReviewType[]
+  selectedReview: StudyGroupReviewType | null
+  reviewStats: { average: number; total: number }
+  isLoading: boolean
+  error: ApiError | null
 
-  openReviewList: (study: StudyGroupResponseType) => void
+  fetchStudies: () => Promise<void>
+  openReviewList: (study: StudyGroupResponseType) => Promise<void>
   openReviewCreate: (study: StudyGroupResponseType) => void
   openReviewEdit: (
     study: StudyGroupResponseType,
@@ -16,11 +24,30 @@ interface StudyGroupState {
 }
 
 export const useStudyGroupStore = create<StudyGroupState>((set) => ({
+  studies: [],
   selectedStudy: null,
-  selectedReview: null,
   modal: 'none',
+  reviews: [],
+  selectedReview: null,
+  reviewStats: { average: 0, total: 0 },
+  isLoading: false,
+  error: null,
 
-  openReviewList: (study) => {
+  fetchStudies: async () => {
+    set({ isLoading: true, error: null })
+
+    try {
+      const data = await getStudyGroups()
+      set({ studies: data })
+    } catch (e) {
+      set({ error: e as ApiError })
+      throw e
+    } finally {
+      set({ isLoading: false })
+    }
+  },
+
+  openReviewList: async (study) => {
     set({ selectedStudy: study, selectedReview: null, modal: 'list' })
   },
 

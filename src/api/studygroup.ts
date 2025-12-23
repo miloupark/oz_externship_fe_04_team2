@@ -1,6 +1,5 @@
 import { axiosInstance } from '@/api/axios'
 import { API_PATHS } from '@/constants'
-import type { StudyGroupForm } from '@/schema'
 import type {
   StudyGroupDetailType,
   StudyGroupResponseType,
@@ -8,28 +7,31 @@ import type {
   StudyGroupSuccessResponseType,
   UpdateStudyGroupRequestType,
 } from '@/types'
-import { apiFetch } from '@/utils'
 
 // 스터디 그룹 조회
 export async function getStudyGroups() {
-  return apiFetch<StudyGroupResponseType[]>(API_PATHS.STUDYGROUP.LIST)
+  const { data } = await axiosInstance.get<StudyGroupResponseType[]>(
+    API_PATHS.STUDYGROUP.LIST
+  )
+
+  return data
 }
 
 // 스터디 그룹 리뷰 조회
 export async function getStudyReviews(studyId: number) {
-  return apiFetch<{
-    reviews: StudyGroupReviewType[]
-    average_rating: number
-    total_count: number
-  }>(API_PATHS.REVIEW.LIST(studyId))
+  const res = await axiosInstance<StudyGroupReviewType[]>(
+    API_PATHS.REVIEW.LIST(studyId)
+  )
+  return res.data
 }
 
 // 스터디 그룹 생성
-export async function createStudyGroup(body: StudyGroupForm) {
-  return apiFetch<StudyGroupDetailType>(API_PATHS.STUDYGROUP.CREATE, {
-    method: 'POST',
-    body: JSON.stringify(body),
-  })
+export async function createStudyGroup(body: UpdateStudyGroupRequestType) {
+  const { data } = await axiosInstance.post<StudyGroupDetailType>(
+    API_PATHS.STUDYGROUP.CREATE,
+    body
+  )
+  return data
 }
 
 // 스터디 그룹 상세 조회

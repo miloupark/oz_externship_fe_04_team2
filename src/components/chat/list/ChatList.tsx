@@ -11,7 +11,7 @@ export function ChatList({ rooms, onSelectRoom }: ChatListProps) {
     <ul>
       {rooms.map((chatRoom) => (
         <ChatListItem
-          key={chatRoom.id}
+          key={chatRoom.group_id}
           chatRoom={chatRoom}
           onClick={onSelectRoom}
         />

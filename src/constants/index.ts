@@ -1,5 +1,6 @@
 export * from './api'
 export * from './externalLinks'
+export * from './notification'
 export * from './pagination'
 export * from './route'
 export * from './toolbar'

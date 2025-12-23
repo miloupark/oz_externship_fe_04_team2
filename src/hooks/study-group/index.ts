@@ -1,6 +1,7 @@
 export * from './useCreateStudyGroup'
 export * from './useDelegateStudyGroupLeader'
 export * from './useDeleteStudyGroup'
+export * from './useImageUpload'
 export * from './useKickStudyGroupMember'
 export * from './useLeaveStudyGroup'
 export * from './useStudyGroups'

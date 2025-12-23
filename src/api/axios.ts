@@ -2,6 +2,7 @@ import { refreshAccessToken } from '@/api/auth/login'
 import { API_BASE_URL } from '@/constants'
 import { LoginStateStore } from '@/store'
 import AuthStateStore from '@/store/authStateStore'
+import { ApiError } from '@/utils'
 import axios from 'axios'
 
 export const axiosInstance = axios.create({
@@ -42,21 +43,25 @@ axiosInstance.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newToken}`
 
         return axiosInstance(originalRequest)
-      } catch (refreshError) {
+      } catch {
         // 갱신 실패 시 토큰 제거
         AuthStateStore.getState().clearAuth()
         LoginStateStore.getState().setLoginState('GUEST')
-
-        return Promise.reject(refreshError)
       }
     }
 
-    if (error.response?.data) {
-      return Promise.reject({
-        ...error.response.data,
-        statusCode: error.response.status,
-      })
+    if (error.response) {
+      const { status, data } = error.response
+      return Promise.reject(
+        new ApiError(
+          status,
+          data?.message || '요청에 실패했습니다',
+          data?.error_detail,
+          data
+        )
+      )
     }
-    return Promise.reject(error)
+
+    return Promise.reject(new ApiError(0, '네트워크 오류가 발생했습니다'))
   }
 )

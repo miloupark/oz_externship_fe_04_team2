@@ -1,3 +1,4 @@
+import { ChatBadge } from '@/components/chat/common'
 import type { ChatRoomListItem } from '@/types'
 import { formatMonthDay } from '@/utils'
 
@@ -21,14 +22,15 @@ export function ChatListItem({ chatRoom, onClick }: ChatListItemProps) {
     <li className="border-custom-gray-200 group border-t first:border-t-0">
       <button
         type="button"
-        onClick={() => onClick?.(chatRoom.id)}
+        onClick={() => onClick?.(chatRoom.group_id)}
         className="flex w-full flex-col gap-1 p-3 pb-4"
       >
         <div className="flex items-center justify-between">
           <span className="text-custom-gray-900 group-hover:text-primary-600 text-sm transition-colors duration-150">
-            {chatRoom.name}
+            {chatRoom.group_name}
           </span>
           <span className="text-custom-gray-500 text-xs">{dateLabel}</span>
+          <ChatBadge count={chatRoom.unread_count} />
         </div>
         <span className="text-custom-gray-600 truncate text-start text-xs">
           {previewMessage}

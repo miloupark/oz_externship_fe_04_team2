@@ -1,8 +1,8 @@
 import { createStudyGroup } from '@/api'
+import { showToast } from '@/lib'
 import { ApiError } from '@/utils'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router'
-import { toast } from 'react-toastify'
 
 export function useCreateStudyGroup() {
   const queryClient = useQueryClient()
@@ -16,15 +16,15 @@ export function useCreateStudyGroup() {
         queryKey: ['studyGroups'],
       })
 
-      toast.success('스터디 그룹이 생성되었습니다')
+      showToast.success('생성 성공!', '스터디 그룹이 생성되었습니다')
       navigate(`/${data.id}`)
     },
 
     onError: (error) => {
       if (error instanceof ApiError) {
-        toast.error(error.message)
+        showToast.error('실패!', error.getFirstMessage())
       } else {
-        toast.error('스터디 생성에 실패했습니다')
+        showToast.error('스터디 생성 실패!', '스터디 생성에 실패했습니다')
       }
     },
   })

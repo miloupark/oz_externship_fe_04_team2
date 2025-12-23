@@ -1,29 +1,24 @@
 import { API_PATHS } from '@/constants'
-import { apiFetch } from '@/utils'
+import { axiosInstance } from '@/api'
 
-export function createReview(
-  studyId: number,
-  data: {
-    star_rating: number
-    content: string
-  }
-) {
-  return apiFetch(API_PATHS.REVIEW.LIST(studyId), {
-    method: 'POST',
-    body: JSON.stringify(data),
-  })
+interface ReviewPayload {
+  star_rating: number
+  content: string
 }
 
-export function updateReview(
+export async function createReview(studyId: number, data: ReviewPayload) {
+  const res = await axiosInstance.post(API_PATHS.REVIEW.LIST(studyId), data)
+  return res.data
+}
+
+export async function updateReview(
   studyId: number,
   reviewId: number,
-  data: {
-    star_rating: number
-    content: string
-  }
+  data: ReviewPayload
 ) {
-  return apiFetch(API_PATHS.REVIEW.DETAIL(studyId, reviewId), {
-    method: 'PATCH',
-    body: JSON.stringify(data),
-  })
+  const res = await axiosInstance.patch(
+    API_PATHS.REVIEW.DETAIL(studyId, reviewId),
+    data
+  )
+  return res.data
 }

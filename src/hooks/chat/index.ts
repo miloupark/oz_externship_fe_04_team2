@@ -1,6 +1,5 @@
 export * from './useChatInput'
 export * from './useInfiniteChatMessages'
-export * from './useChatParticipants'
 export * from './useChatRooms'
 export * from './useChatSocket'
 export * from './useAutoScrollToBottom'

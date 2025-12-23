@@ -1,14 +1,15 @@
 import { API_PATHS } from '@/constants'
+import { axiosInstance } from '@/api/axios'
 import { mapLectureToSelection } from '@/lib/lecture'
+import type {
+  LectureApiResponse,
+  StudyGroupLectureSelectionType,
+} from '@/types'
 
-export async function getLectures() {
-  const res = await fetch(API_PATHS.STUDYGROUP.LECTURES)
+export async function getLectures(): Promise<StudyGroupLectureSelectionType[]> {
+  const { data } = await axiosInstance.get<{
+    results: LectureApiResponse[]
+  }>(API_PATHS.STUDYGROUP.LECTURES)
 
-  if (!res.ok) {
-    throw new Error('강의 목록을 불러오는데에 실패했습니다')
-  }
-
-  const json = await res.json()
-
-  return json.results.map(mapLectureToSelection)
+  return data.results.map(mapLectureToSelection)
 }

@@ -1,3 +1,3 @@
 export * from './calendar-localizer'
-export * from './fetcher'
+export * from './apiError'
 export * from './format'

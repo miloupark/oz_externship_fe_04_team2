@@ -7,11 +7,7 @@ import {
   CustomToolbar,
   ScheduleEventItem,
 } from '@/components/schedule-calendar'
-import { mockSchedules } from '@/mocks/data/studygroup/schedule'
-import type {
-  StudyScheduleDetailType,
-  StudyScheduleListItemType,
-} from '@/types'
+import type { StudyScheduleListItemType } from '@/types'
 import { parseISO } from 'date-fns'
 
 export interface ScheduleEvent {
@@ -24,7 +20,7 @@ export interface ScheduleEvent {
 
 interface ScheduleCalendarProps {
   schedules: StudyScheduleListItemType[]
-  onScheduleClick?: (schedule: StudyScheduleDetailType) => void
+  onScheduleClick?: (scheduleId: number) => void
 }
 
 export function ScheduleCalendar({
@@ -40,13 +36,16 @@ export function ScheduleCalendar({
 
   // react-big-calendar는 start/end가 Date 객체인 이벤트 배열 요구
   const toEvent = (schedule: StudyScheduleListItemType): ScheduleEvent => {
+    const dateStr = schedule.session_date.substring(0, 10)
+    const startTime = schedule.start_time.substring(0, 5)
+    const endTime = schedule.end_time.substring(0, 5)
+
     return {
       id: schedule.id,
       title: schedule.title,
-      timeLabel: `${schedule.start_time} ~ ${schedule.end_time}`,
-      // ISO 문자열(yyyy-MM-ddTHH:mm) → Date 변환
-      start: parseISO(`${schedule.session_date}T${schedule.start_time}`),
-      end: parseISO(`${schedule.session_date}T${schedule.end_time}`),
+      timeLabel: `${startTime} ~ ${endTime}`,
+      start: parseISO(`${dateStr}T${schedule.start_time}`),
+      end: parseISO(`${dateStr}T${schedule.end_time}`),
     }
   }
 
@@ -58,12 +57,8 @@ export function ScheduleCalendar({
     setMonth(newDate)
   }
 
-  // 스케줄 일정 클릭 시 상세 mock 데이터 조회 및 전달
   const handleSelectScheduleDetail = (event: ScheduleEvent) => {
-    const detail = mockSchedules.find((schedule) => schedule.id === event.id)
-    if (detail && onScheduleClick) {
-      onScheduleClick(detail)
-    }
+    onScheduleClick?.(event.id)
   }
 
   return (

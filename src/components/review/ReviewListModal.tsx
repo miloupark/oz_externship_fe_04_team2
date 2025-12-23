@@ -1,14 +1,17 @@
 import { Button, Modal } from '@/components/common'
+import { Loading } from '@/components/fallback-ui'
 import { StarRating } from '@/components/review'
-import { useStudyReviews } from '@/hooks/review/useStudyReviews'
+import { useStudyReviews } from '@/hooks/review'
 import { useStudyGroupStore } from '@/store'
 import { formatDotDate } from '@/utils'
-import { Loading } from '../fallback-ui'
+import type { StudyGroupReviewType } from '@/types'
 
 export function ReviewListModal() {
   const { selectedStudy, modal, openReviewCreate, openReviewEdit, closeModal } =
     useStudyGroupStore()
-  const { data, isLoading } = useStudyReviews(selectedStudy!.id ?? 0)
+  const { data: reviews = [], isLoading } = useStudyReviews(
+    selectedStudy!.id ?? 0
+  )
 
   if (!selectedStudy) return null
 
@@ -20,13 +23,16 @@ export function ReviewListModal() {
     )
   }
 
-  const reviews = data?.reviews ?? []
-  const reviewStats = {
-    average: data?.average_rating ?? 0,
-    total: data?.total_count ?? 0,
-  }
+  const total = reviews.length
+  const average =
+    total === 0
+      ? 0
+      : reviews.reduce(
+          (sum: number, r: StudyGroupReviewType) => sum + r.star_rating,
+          0
+        ) / total
 
-  const myReview = reviews.find((r) => r.is_mine)
+  const myReview = reviews.find((r: StudyGroupReviewType) => r.is_mine)
 
   return (
     <Modal
@@ -41,17 +47,13 @@ export function ReviewListModal() {
         <p className="text-custom-gray-500 text-xs">{selectedStudy.name}</p>
         <div className="mt-6 flex flex-col items-center justify-center gap-2">
           <div className="flex gap-2">
-            <StarRating
-              rating={Math.round(reviewStats.average)}
-              readonly
-              size={24}
-            />
+            <StarRating rating={Math.round(average)} readonly size={24} />
             <span className="text-custom-gray-900 text-2xl font-bold">
-              {reviewStats.average}
+              {average}
             </span>
           </div>
           <div className="text-custom-gray-400 text-sm">
-            총 {reviewStats.total}개의 리뷰
+            총 {total}개의 리뷰
           </div>
         </div>
       </div>

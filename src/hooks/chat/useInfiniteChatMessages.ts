@@ -23,9 +23,8 @@ export function useInfiniteChatMessages(groupId: number | string) {
 
   const messages: ChatMessage[] =
     query.data?.pages
-      ?.slice()
-      .reverse()
-      .flatMap((page) => page.results) ?? []
+      ?.flatMap((page) => page.results)
+      .sort((a, b) => a.id - b.id) ?? []
 
   return {
     ...query,

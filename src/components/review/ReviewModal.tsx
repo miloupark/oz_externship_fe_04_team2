@@ -3,6 +3,7 @@ import { Button, Modal } from '@/components/common'
 import { StarRating } from '@/components/review'
 import { useStudyGroupStore } from '@/store'
 import { useReviewMutation } from '@/hooks/review'
+import { formatYearMonthDay } from '@/utils'
 
 export function ReviewModal() {
   const { selectedStudy, selectedReview, modal, closeModal } =
@@ -55,7 +56,8 @@ export function ReviewModal() {
           {selectedStudy.name}
         </h1>
         <p className="text-custom-gray-500 mt-2 text-sm">
-          {selectedStudy.start_at} ~ {selectedStudy.end_at}
+          {formatYearMonthDay(selectedStudy.start_at)} ~{' '}
+          {formatYearMonthDay(selectedStudy.end_at)}
         </p>
       </div>
       <div className="py-2">

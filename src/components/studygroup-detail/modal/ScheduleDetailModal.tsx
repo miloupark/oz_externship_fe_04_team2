@@ -1,7 +1,7 @@
 import { Badge, Button, Modal } from '@/components/common'
 import { useBodyScrollLock } from '@/hooks'
 import type { StudyScheduleDetailType } from '@/types'
-import { formatDateTime } from '@/utils'
+import { formatDateTime, formatYearMonthDay } from '@/utils'
 import { Calendar, Clock3, UserRound } from 'lucide-react'
 
 interface ScheduleDetailModalProps {
@@ -19,6 +19,8 @@ export function ScheduleDetailModal({
   onEdit,
   onDelete,
 }: ScheduleDetailModalProps) {
+  const dateOnly = schedule.session_date.substring(0, 10)
+
   useBodyScrollLock(isOpen)
 
   const handleClickEdit = () => {
@@ -57,7 +59,7 @@ export function ScheduleDetailModal({
           </p>
           <p className="text-custom-gray-700 inline-flex items-center gap-2 text-sm font-medium">
             <Calendar className="text-custom-gray-400 h-4 w-4" />
-            {schedule.session_date}
+            {formatYearMonthDay(dateOnly)}
           </p>
         </div>
 
@@ -67,7 +69,8 @@ export function ScheduleDetailModal({
           </p>
           <p className="text-custom-gray-700 inline-flex items-center gap-2 text-sm font-medium">
             <Clock3 className="text-custom-gray-400 h-4 w-4" />
-            {schedule.start_time} ~ {schedule.end_time}
+            {schedule.start_time.substring(0, 5)} ~{' '}
+            {schedule.end_time.substring(0, 5)}
           </p>
         </div>
       </div>

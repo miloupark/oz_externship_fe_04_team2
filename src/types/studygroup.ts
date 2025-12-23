@@ -31,3 +31,24 @@ export interface StudyGroupLectureSelectionType {
   thumbnail_img_url: string
   platform: string
 }
+
+export interface LectureApiResponse {
+  id: number
+  title: string
+  instructor: string
+  total_class_time: number
+  original_price: number
+  discounted_price: number
+  difficulty: 'EASY' | 'NORMAL' | 'HARD'
+  thumbnail_img_url: string
+  average_rating: number
+  platform: 'INFLEARN' | 'UDEMY'
+  url_link: string
+  categories: { id: number; name: string }[]
+  reviews: {
+    id: number
+    rating: number
+    content: string
+    created_at: string
+  }[]
+}

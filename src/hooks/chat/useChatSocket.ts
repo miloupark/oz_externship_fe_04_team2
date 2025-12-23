@@ -1,8 +1,10 @@
 import type {
   ChatMessage,
+  ChatMessageResponse,
   ChatParticipant,
   ServerToClientWebSocketMsg,
 } from '@/types'
+import { useQueryClient, type InfiniteData } from '@tanstack/react-query'
 import { useEffect, useRef, useState } from 'react'
 
 interface UseChatSocketOptions {
@@ -23,6 +25,7 @@ export function useChatSocket({
   accessToken,
   enabled = true,
 }: UseChatSocketOptions) {
+  const queryClient = useQueryClient()
   const socketRef = useRef<WebSocket | null>(null)
   const [status, setStatus] = useState<SocketStatus>(SocketStatus.CLOSED)
   const [participants, setParticipants] = useState<ChatParticipant[]>([])
@@ -33,7 +36,7 @@ export function useChatSocket({
 
     setStatus(SocketStatus.CONNECTING)
 
-    const url = `wss://api.ozcoding.site/ws/chat/${groupId}/?token=${accessToken}`
+    const url = `wss://api.ozcoding.site/ws/chatrooms/${groupId}/?token=${accessToken}`
     const socket = new WebSocket(url)
     socketRef.current = socket
 
@@ -50,20 +53,59 @@ export function useChatSocket({
         case 'presence':
           setParticipants(data.members)
           break
+
         case 'user_join':
-          setParticipants((prev) => [...prev, data.user])
+          setParticipants((prev) => {
+            const exists = prev.some(
+              (participant) => participant.id === data.user.id
+            )
+            if (exists) return prev
+            return [...prev, data.user]
+          })
           break
+
         case 'user_leave':
           setParticipants((prev) =>
             prev.filter((participant) => participant.id !== data.user.id)
           )
           break
+
         case 'history':
           setMessages(data.messages)
           break
-        case 'message':
-          setMessages((prev) => [...prev, data])
+
+        case 'message': {
+          const { type: _, ...msg } = data
+
+          queryClient.setQueryData<InfiniteData<ChatMessageResponse>>(
+            ['chatMessages', groupId],
+            (prev) => {
+              if (!prev?.pages?.length) return prev
+
+              const firstPage = prev.pages[0]
+
+              // 이미 있으면 무시
+              if (
+                firstPage.results.some(
+                  (existingMsg) => existingMsg.id === msg.id
+                )
+              ) {
+                return prev
+              }
+
+              const pages = [...prev.pages]
+              pages[0] = {
+                ...firstPage,
+                results: [...firstPage.results, msg],
+              }
+
+              return { ...prev, pages }
+            }
+          )
+
+          queryClient.invalidateQueries({ queryKey: ['chatRooms'] })
           break
+        }
       }
     }
 
@@ -82,7 +124,7 @@ export function useChatSocket({
       socket.close()
       socketRef.current = null
     }
-  }, [groupId, accessToken, enabled])
+  }, [groupId, accessToken, enabled, queryClient])
 
   // 클라이언트 → 서버 메시지 전송
   const sendMessage = (content: string) => {

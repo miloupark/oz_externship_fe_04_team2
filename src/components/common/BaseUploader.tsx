@@ -7,6 +7,7 @@ interface BaseUploaderProps {
   multiple?: boolean
   onDrop: (files: File[]) => void
   onDropRejected?: (rejections: FileRejection[]) => void
+  disabled?: boolean
   children?: React.ReactNode
 }
 
@@ -16,6 +17,7 @@ export function BaseUploader({
   multiple = false,
   onDrop,
   onDropRejected,
+  disabled,
   children,
 }: BaseUploaderProps) {
   const handleDrop = useCallback(
@@ -38,7 +40,13 @@ export function BaseUploader({
   return (
     <div
       {...getRootProps()}
-      className={`centralize relative w-full cursor-pointer flex-col rounded-lg border-2 border-dashed p-6 ${isDragActive ? 'border-primary-500 bg-primary-50' : 'hover:bg-custom-gray-50 border-custom-gray-300 bg-white'} `}
+      className={`centralize relative w-full flex-col rounded-lg border-2 border-dashed p-6 ${
+        disabled
+          ? 'bg-custom-gray-100 border-custom-gray-200 cursor-not-allowed opacity-60'
+          : isDragActive
+            ? 'border-primary-500 bg-primary-50'
+            : 'hover:bg-custom-gray-50 border-custom-gray-300 bg-white'
+      } `}
     >
       <input {...getInputProps()} />
       {children}

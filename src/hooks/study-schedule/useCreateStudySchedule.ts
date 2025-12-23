@@ -20,6 +20,7 @@ export const useCreateStudySchedule = (groupId: number | string) => {
       // 생성 성공 시 해당 그룹 스케줄 목록 리패치
       queryClient.invalidateQueries({
         queryKey: ['study-schedules', groupId],
+        refetchType: 'active',
       })
     },
   })

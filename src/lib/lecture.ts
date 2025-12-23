@@ -1,6 +1,11 @@
-import type { StudyGroupLectureSelectionType } from '@/types'
+import type {
+  LectureApiResponse,
+  StudyGroupLectureSelectionType,
+} from '@/types'
 
-export function mapLectureToSelection(l: StudyGroupLectureSelectionType) {
+export function mapLectureToSelection(
+  l: LectureApiResponse
+): StudyGroupLectureSelectionType {
   return {
     id: l.id,
     title: l.title,

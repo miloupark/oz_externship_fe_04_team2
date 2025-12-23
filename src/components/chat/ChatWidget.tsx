@@ -4,8 +4,8 @@ import {
   useBodyScrollLock,
   useChatRooms,
   useChatSocket,
+  useUserData,
 } from '@/hooks'
-import { mockChatMessages } from '@/mocks/data'
 import { useChatStore } from '@/store'
 import AuthStateStore from '@/store/authStateStore'
 import { MessageCircle, X } from 'lucide-react'
@@ -24,42 +24,25 @@ export function ChatWidget() {
 
   const { chatRooms } = useChatRooms()
   const accessToken = AuthStateStore((state) => state.accessToken)
+  const { data: userData } = useUserData()
 
   // 클릭한 채팅방 찾기
   const selectedRoom =
     selectedGroupId != null
-      ? chatRooms.find((room) => room.id === selectedGroupId)
+      ? chatRooms.find((room) => room.group_id === selectedGroupId)
       : null
 
   const isRoomView = currentView === 'room' && !!selectedRoom
 
-  // 테스트용
-  const isLoggedIn = true
-  const currentUserId = 1
-
-  const mockParticipants = selectedGroupId
-    ? Array.from(
-        new Map(
-          (mockChatMessages[selectedGroupId] ?? []).map((msg) => [
-            msg.sender.id,
-            {
-              id: msg.sender.id,
-              nickname: msg.sender.nickname,
-              profile_img_url: msg.sender.profile_img_url,
-              is_online: true,
-            },
-          ])
-        ).values()
-      )
-    : []
-
-  const socketEnabled = false
+  const currentUserId = userData?.id ?? null
+  const isLoggedIn = !!accessToken && currentUserId !== null
   const canRenderRoom = isRoomView && isLoggedIn
+  const socketEnabled = true
 
-  const { status, sendMessage } = useChatSocket({
+  const { status, participants, sendMessage } = useChatSocket({
     groupId: selectedGroupId ?? 0,
     accessToken,
-    enabled: socketEnabled,
+    enabled: socketEnabled && canRenderRoom,
   })
 
   // 위젯 버튼 클릭
@@ -78,7 +61,10 @@ export function ChatWidget() {
   }
 
   // 미읽음 메세지
-  const unreadCount = 0
+  const unreadCount = chatRooms.reduce(
+    (sum, room) => sum + room.unread_count,
+    0
+  )
 
   return (
     <div className="fixed right-6 bottom-6 z-50 flex flex-col items-end">
@@ -109,8 +95,8 @@ export function ChatWidget() {
           {canRenderRoom && selectedRoom && (
             <ChatRoomPanel
               groupId={selectedGroupId!}
-              roomName={selectedRoom.name}
-              participants={mockParticipants}
+              roomName={selectedRoom.group_name}
+              participants={participants}
               currentUserId={currentUserId}
               onClose={toggleOpen}
               onSend={sendMessage}

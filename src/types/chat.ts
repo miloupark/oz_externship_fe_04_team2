@@ -7,9 +7,9 @@ export interface ChatRoomListResponse {
 
 // 채팅방 목록 아이템
 export interface ChatRoomListItem {
-  id: number
-  name: string
-  unread_message: number | null
+  group_id: number
+  group_name: string
+  unread_count: number
   last_message: ChatRoomPreview | null
 }
 
