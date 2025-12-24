@@ -1,17 +1,39 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+
+let lockCount = 0
+let savedOverflow = ''
 
 export function useBodyScrollLock(isOpen: boolean) {
-  useEffect(() => {
-    const previousOverflow = document.body.style.overflow
+  const lockedByMe = useRef(false)
 
+  const unlock = () => {
+    if (!lockedByMe.current) return
+    lockedByMe.current = false
+    lockCount = Math.max(0, lockCount - 1)
+
+    if (lockCount === 0) {
+      document.body.style.overflow = savedOverflow
+      savedOverflow = ''
+    }
+  }
+
+  useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden'
+      if (!lockedByMe.current) {
+        lockedByMe.current = true
+
+        if (lockCount === 0) {
+          savedOverflow = document.body.style.overflow || ''
+          document.body.style.overflow = 'hidden'
+        }
+        lockCount += 1
+      }
     } else {
-      document.body.style.overflow = previousOverflow
+      unlock()
     }
 
     return () => {
-      document.body.style.overflow = previousOverflow
+      unlock()
     }
   }, [isOpen])
 }

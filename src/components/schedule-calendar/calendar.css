@@ -87,6 +87,10 @@
   display: none;
 }
 
+.rbc-event.rbc-selected {
+  background-color: #fef9c3;
+}
+
 /* 더보기 버튼 */
 .rbc-show-more {
   font-size: 12px;
