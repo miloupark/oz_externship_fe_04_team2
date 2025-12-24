@@ -4,7 +4,7 @@ import { Link } from 'react-router'
 
 export function NotFound() {
   return (
-    <div className="border-custom-gray-200 bg-custom-gray-50 m-6 flex h-[540px] items-center rounded-2xl border">
+    <div className="border-custom-gray-200 bg-custom-gray-50 flex h-[540px] items-center rounded-2xl border">
       <div className="w-full p-6 text-center">
         <h4 className="text-primary-500 text-[96px]">404</h4>
         <p className="text-custom-gray-700 mb-6 text-[20px] font-bold">

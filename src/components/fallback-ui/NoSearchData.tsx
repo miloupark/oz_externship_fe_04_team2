@@ -39,7 +39,7 @@ export const NoSearchResult = ({
   const currentConfig = config[variant]
 
   return (
-    <div className="border-custom-gray-200 bg-custom-gray-50 m-6 flex h-[382px] justify-center rounded-2xl border text-center">
+    <div className="border-custom-gray-200 bg-custom-gray-50 flex h-[382px] justify-center rounded-2xl border text-center">
       <div className="centralize h-full w-full flex-col p-6 text-center">
         <div className="mb-6">
           <div className="bg-custom-gray-100 centralize h-20 w-20 rounded-full">
