@@ -1,6 +1,7 @@
 import { ArrowRight, Star } from 'lucide-react'
 import { Button } from '@/components/common'
 import { cn } from '@/lib'
+import { Link } from 'react-router'
 
 interface StudyCardFooterProps {
   groupId: number
@@ -22,9 +23,11 @@ export function StudyCardFooter({
   if (variant === 'default') {
     return (
       <div className="border-custom-gray-100 mt-auto flex justify-end border-t pt-3">
-        <button className="text-primary-600 hover:text-primary-700 flex items-center gap-1.5 text-xs font-medium transition-colors">
-          자세히 보기 <ArrowRight size={14} className="mb-0.5" />
-        </button>
+        <Link to={`/${groupId}`}>
+          <button className="text-primary-600 hover:text-primary-700 flex items-center gap-1.5 text-xs font-medium transition-colors">
+            자세히 보기 <ArrowRight size={14} className="mb-0.5" />
+          </button>
+        </Link>
       </div>
     )
   }
