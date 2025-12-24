@@ -28,6 +28,7 @@ export function ChatMessageList({
     useAutoScrollToBottom(messages.length, {
       onlyIfAtBottom: true,
       behavior: 'auto',
+      threshold: 100,
     })
 
   const { hasNewMessage, handleScroll, clearNewMessage } = useChatMessageScroll(
