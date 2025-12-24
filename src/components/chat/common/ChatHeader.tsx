@@ -4,6 +4,7 @@ import { ArrowLeft, X } from 'lucide-react'
 interface ChatHeaderProps {
   title: string
   onlineCount?: number
+  totalUnreadCount?: number
   showBackButton?: boolean
   onBack?: () => void
   onClose: () => void
@@ -12,6 +13,7 @@ interface ChatHeaderProps {
 export function ChatHeader({
   title,
   onlineCount,
+  totalUnreadCount = 0,
   showBackButton,
   onBack,
   onClose,
@@ -25,9 +27,18 @@ export function ChatHeader({
       )}
 
       <div className="flex-1">
-        <span className="text-custom-gray-900 truncate text-sm font-semibold">
-          {title}
-        </span>
+        <div className="flex flex-col">
+          <span className="text-custom-gray-900 truncate text-sm font-semibold">
+            {title}
+          </span>
+
+          {!showBackButton && (
+            <span className="text-primary-600 text-xs">
+              {totalUnreadCount}개의 읽지 않은 메시지
+            </span>
+          )}
+        </div>
+
         {typeof onlineCount === 'number' && (
           <div className="text-custom-gray-600 text-xs">
             <span className="bg-success-500 mr-1 inline-block h-2 w-2 rounded-full" />

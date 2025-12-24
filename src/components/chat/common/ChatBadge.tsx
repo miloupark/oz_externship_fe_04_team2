@@ -11,7 +11,7 @@ export function ChatBadge({ count, className }: ChatBadgeProps) {
   return (
     <span
       className={cn(
-        'bg-danger-500 centralize h-6 w-6 rounded-full px-1 text-xs font-semibold text-white shadow-md',
+        'bg-danger-500 centralize h-6 w-6 rounded-full px-1 text-xs text-white shadow-md',
         className
       )}
     >

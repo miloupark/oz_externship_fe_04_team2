@@ -4,8 +4,9 @@ import {
   ChatParticipants,
   ChatRoomInput,
 } from '@/components/chat'
-import { useInfiniteChatMessages } from '@/hooks'
+import { useInfiniteChatMessages, useMarkChatRoomAsRead } from '@/hooks'
 import type { ChatParticipant } from '@/types'
+import { useEffect } from 'react'
 
 interface ChatRoomPanelProps {
   groupId: number
@@ -28,6 +29,11 @@ export function ChatRoomPanel({
 }: ChatRoomPanelProps) {
   const { messages, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteChatMessages(groupId)
+  const { mutate: markAsRead } = useMarkChatRoomAsRead(groupId)
+
+  useEffect(() => {
+    markAsRead()
+  }, [markAsRead])
 
   const onlineCount = participants.filter(
     (participant) => participant.is_online

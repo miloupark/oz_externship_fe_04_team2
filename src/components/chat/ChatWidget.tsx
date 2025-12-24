@@ -2,6 +2,7 @@ import { ChatBadge, ChatListPanel, ChatRoomPanel } from '@/components/chat'
 import {
   SocketStatus,
   useBodyScrollLock,
+  useChatRoomFromUrl,
   useChatRooms,
   useChatSocket,
   useUserData,
@@ -21,6 +22,7 @@ export function ChatWidget() {
   } = useChatStore()
 
   useBodyScrollLock(isOpen)
+  useChatRoomFromUrl()
 
   const { chatRooms } = useChatRooms()
   const accessToken = AuthStateStore((state) => state.accessToken)

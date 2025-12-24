@@ -29,8 +29,12 @@ export function ChatListItem({ chatRoom, onClick }: ChatListItemProps) {
           <span className="text-custom-gray-900 group-hover:text-primary-600 text-sm transition-colors duration-150">
             {chatRoom.group_name}
           </span>
-          <span className="text-custom-gray-500 text-xs">{dateLabel}</span>
-          <ChatBadge count={chatRoom.unread_count} />
+          <div className="flex items-center gap-1">
+            <span className="text-custom-gray-500 text-xs">{dateLabel}</span>
+            <span>
+              <ChatBadge count={chatRoom.unread_count} />
+            </span>
+          </div>
         </div>
         <span className="text-custom-gray-600 truncate text-start text-xs">
           {previewMessage}
