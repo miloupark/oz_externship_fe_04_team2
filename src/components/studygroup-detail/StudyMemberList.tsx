@@ -10,24 +10,14 @@ import { Plus, UserRound, X } from 'lucide-react'
 interface StudyMemberListProps {
   groupId: number
   members: StudyGroupMemberType[]
-  leaderId?: number
-  currentUserId: number
 }
 
-export function StudyMemberList({
-  groupId,
-  members,
-  leaderId,
-  currentUserId,
-}: StudyMemberListProps) {
+export function StudyMemberList({ groupId, members }: StudyMemberListProps) {
   const { mutate: delegateLeader } = useDelegateStudyGroupLeader(groupId)
   const { mutate: kickMember } = useKickStudyGroupMember(groupId)
 
-  const isCurrentUserLeader =
-    currentUserId !== undefined && currentUserId === leaderId
-
-  const handleDelegateLeader = (memberId: number) => {
-    delegateLeader(memberId, {
+  const handleDelegateLeader = (targetMemberId: number) => {
+    delegateLeader(targetMemberId, {
       onSuccess: () =>
         showToast.success('리더 위임 완료', '리더 권한이 위임되었습니다.'),
       onError: () =>
@@ -56,11 +46,7 @@ export function StudyMemberList({
       <ul className="flex max-h-[384px] flex-col gap-3 overflow-y-auto">
         {members.map((member) => {
           const isLeader = member.is_leader
-          const isSelf =
-            currentUserId !== undefined && member.id === currentUserId
-
-          // 리더만 버튼 보임 + 본인은 제외
-          const canManageMember = isCurrentUserLeader && !isSelf
+          const showActions = !isLeader
 
           return (
             <li key={member.id} className="group flex justify-between">
@@ -77,7 +63,7 @@ export function StudyMemberList({
               </div>
 
               {/* 리더 액션 버튼 */}
-              {canManageMember && (
+              {showActions && (
                 <div className="hidden items-center gap-3 text-sm group-hover:flex">
                   <Button
                     variant="ghost"

@@ -6,21 +6,15 @@ import { Calendar, LogOutIcon, Pencil, UsersRound } from 'lucide-react'
 
 interface StudyDetailHeroProps {
   group: StudyGroupDetailType
-  currentUserId: number
   onClickEdit: () => void
   onClickLeave: () => void
 }
 
 export function StudyDetailHero({
   group,
-  currentUserId,
   onClickEdit,
   onClickLeave,
 }: StudyDetailHeroProps) {
-  const isLeader = group.members.some(
-    (member) => member.id === currentUserId && member.is_leader
-  )
-
   return (
     <section className="border-custom-gray-200 overflow-hidden rounded-xl border">
       <div className="relative aspect-[16/9] w-full md:h-[480px] lg:h-[608px]">
@@ -40,16 +34,14 @@ export function StudyDetailHero({
         <div className="absolute inset-0 flex flex-col justify-between p-6">
           {/* 상단 버튼 */}
           <div className="flex justify-end gap-3">
-            {isLeader && (
-              <Button
-                variant="secondary"
-                className="gap-2 text-base"
-                onClick={onClickEdit}
-              >
-                <Pencil className="h-4 w-4" />
-                <span>수정하기</span>
-              </Button>
-            )}
+            <Button
+              variant="secondary"
+              className="gap-2 text-base"
+              onClick={onClickEdit}
+            >
+              <Pencil className="h-4 w-4" />
+              <span>수정하기</span>
+            </Button>
             <Button
               variant="danger"
               className="gap-2 text-base"

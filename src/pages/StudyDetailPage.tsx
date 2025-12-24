@@ -17,8 +17,7 @@ export function StudyDetailPage() {
   const numericGroupId = Number(groupId)
   const navigate = useNavigate()
 
-  const { data: userData, isLoading: isUserLoading } = useUserData()
-  const currentUserId = userData?.id
+  const { isLoading: isUserLoading } = useUserData()
 
   const { data: group, isLoading: isGroupLoading } =
     useStudyGroupDetail(numericGroupId)
@@ -27,8 +26,7 @@ export function StudyDetailPage() {
   if (isUserLoading || isGroupLoading) {
     return <Loading />
   }
-
-  if (!group || !currentUserId) return null
+  if (!group) return null
 
   const handleClickEdit = () => {
     navigate(`/${numericGroupId}/edit`)
@@ -44,10 +42,9 @@ export function StudyDetailPage() {
         navigate('/')
       },
       onError: () => {
-        // 에러 메시지 분기 처리 필요
-        showToast.warning(
+        showToast.error(
           '스터디 나가기 실패',
-          '스터디 그룹을 찾을 수 없습니다.'
+          '리더는 스터디 그룹을 나갈 수 없습니다.'
         )
       },
     })
@@ -58,7 +55,6 @@ export function StudyDetailPage() {
       {/* 상단 히어로 */}
       <StudyDetailHero
         group={group}
-        currentUserId={currentUserId}
         onClickEdit={handleClickEdit}
         onClickLeave={handleClickLeave}
       />
@@ -77,12 +73,7 @@ export function StudyDetailPage() {
         <div className="flex w-full flex-col gap-6 lg:w-[384px]">
           <StudyDetailInfo group={group} />
           <StudyLectureList lectures={group.lectures} />
-          <StudyMemberList
-            groupId={numericGroupId}
-            members={group.members}
-            leaderId={group.members.find((m) => m.is_leader)?.id}
-            currentUserId={currentUserId}
-          />
+          <StudyMemberList groupId={numericGroupId} members={group.members} />
         </div>
       </div>
     </div>
