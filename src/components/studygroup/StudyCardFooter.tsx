@@ -23,11 +23,9 @@ export function StudyCardFooter({
   if (variant === 'default') {
     return (
       <div className="border-custom-gray-100 mt-auto flex justify-end border-t pt-3">
-        <Link to={`/${groupId}`}>
-          <button className="text-primary-600 hover:text-primary-700 flex items-center gap-1.5 text-xs font-medium transition-colors">
-            자세히 보기 <ArrowRight size={14} className="mb-0.5" />
-          </button>
-        </Link>
+        <button className="text-primary-600 hover:text-primary-700 flex items-center gap-1.5 text-xs font-medium transition-colors">
+          자세히 보기 <ArrowRight size={14} className="mb-0.5" />
+        </button>
       </div>
     )
   }
