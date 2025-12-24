@@ -1,7 +1,6 @@
 import { ArrowRight, Star } from 'lucide-react'
 import { Button } from '@/components/common'
 import { cn } from '@/lib'
-import { Link } from 'react-router'
 
 interface StudyCardFooterProps {
   groupId: number
