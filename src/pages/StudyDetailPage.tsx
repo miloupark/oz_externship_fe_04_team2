@@ -17,8 +17,7 @@ export function StudyDetailPage() {
   const numericGroupId = Number(groupId)
   const navigate = useNavigate()
 
-  const { isLoading: isUserLoading } = useUserData()
-
+  const { data: userData, isLoading: isUserLoading } = useUserData()
   const { data: group, isLoading: isGroupLoading } =
     useStudyGroupDetail(numericGroupId)
   const { mutate: leaveStudyGroup } = useLeaveStudyGroup()
@@ -26,13 +25,26 @@ export function StudyDetailPage() {
   if (isUserLoading || isGroupLoading) {
     return <Loading />
   }
-  if (!group) return null
+  if (!group || !userData) return null
+
+  const isCurrentUserLeader = group.members.some(
+    (member) => member.nickname === userData.nickname && member.is_leader
+  )
 
   const handleClickEdit = () => {
     navigate(`/${numericGroupId}/edit`)
   }
 
   const handleClickLeave = () => {
+    // 리더면 위임 요청 알림
+    if (isCurrentUserLeader) {
+      showToast.warning(
+        '리더 위임 필요',
+        '그룹을 나가기 전에 다른 멤버에게 리더를 위임해주세요.'
+      )
+      return
+    }
+
     leaveStudyGroup(numericGroupId, {
       onSuccess: () => {
         showToast.success(
@@ -42,10 +54,7 @@ export function StudyDetailPage() {
         navigate('/')
       },
       onError: () => {
-        showToast.error(
-          '스터디 나가기 실패',
-          '리더는 스터디 그룹을 나갈 수 없습니다.'
-        )
+        showToast.error('스터디 나가기 실패', '스터디 그룹을 찾을 수 없습니다.')
       },
     })
   }
@@ -55,6 +64,7 @@ export function StudyDetailPage() {
       {/* 상단 히어로 */}
       <StudyDetailHero
         group={group}
+        isCurrentUserLeader={isCurrentUserLeader}
         onClickEdit={handleClickEdit}
         onClickLeave={handleClickLeave}
       />

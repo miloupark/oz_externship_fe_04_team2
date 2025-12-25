@@ -6,12 +6,14 @@ import { Calendar, LogOutIcon, Pencil, UsersRound } from 'lucide-react'
 
 interface StudyDetailHeroProps {
   group: StudyGroupDetailType
+  isCurrentUserLeader: boolean
   onClickEdit: () => void
   onClickLeave: () => void
 }
 
 export function StudyDetailHero({
   group,
+  isCurrentUserLeader,
   onClickEdit,
   onClickLeave,
 }: StudyDetailHeroProps) {
@@ -34,14 +36,16 @@ export function StudyDetailHero({
         <div className="absolute inset-0 flex flex-col justify-between p-6">
           {/* 상단 버튼 */}
           <div className="flex justify-end gap-3">
-            <Button
-              variant="secondary"
-              className="gap-2 text-base"
-              onClick={onClickEdit}
-            >
-              <Pencil className="h-4 w-4" />
-              <span>수정하기</span>
-            </Button>
+            {isCurrentUserLeader && (
+              <Button
+                variant="secondary"
+                className="gap-2 text-base"
+                onClick={onClickEdit}
+              >
+                <Pencil className="h-4 w-4" />
+                <span>수정하기</span>
+              </Button>
+            )}
             <Button
               variant="danger"
               className="gap-2 text-base"
