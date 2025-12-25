@@ -68,9 +68,17 @@ export function StudyNoteList({ groupId }: StudyNoteListProps) {
                       </span>
                     </div>
                     <div className="flex items-center gap-3 py-[2px]">
-                      <span className="bg-primary-100 centralize h-8 w-8 rounded-full">
-                        <UserRound className="text-primary-600 h-5 w-5" />
-                      </span>
+                      {note.author.profile_img_url ? (
+                        <img
+                          src={note.author.profile_img_url}
+                          alt={`${note.author.nickname} 프로필`}
+                          className="h-8 w-8 rounded-full object-cover"
+                        />
+                      ) : (
+                        <span className="bg-primary-100 centralize h-8 w-8 rounded-full">
+                          <UserRound className="text-primary-600 h-5 w-5" />
+                        </span>
+                      )}
                       <span className="text-custom-gray-700 text-sm font-medium">
                         {note.author.nickname}
                       </span>

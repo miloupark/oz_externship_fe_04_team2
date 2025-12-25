@@ -82,9 +82,17 @@ export function ScheduleDetailModal({
         <ul className="border-custom-gray-200 flex max-h-[192px] min-h-24 flex-col gap-2 overflow-y-auto rounded-lg border p-4">
           {participants.map((member) => (
             <li key={member.id} className="flex items-center gap-3">
-              <span className="bg-primary-100 centralize h-8 w-8 rounded-full">
-                <UserRound className="text-primary-600 h-[14px] w-[14px]" />
-              </span>
+              {member.profile_img_url ? (
+                <img
+                  src={member.profile_img_url}
+                  alt={`${member.nickname} 프로필`}
+                  className="h-8 w-8 rounded-full object-cover"
+                />
+              ) : (
+                <span className="bg-primary-100 centralize h-8 w-8 rounded-full">
+                  <UserRound className="text-primary-600 h-[14px] w-[14px]" />
+                </span>
+              )}
               <span className="text-sm">{member.nickname}</span>
               {member.is_leader && (
                 <Badge variant="primary" className="h-6 rounded-sm px-2">
