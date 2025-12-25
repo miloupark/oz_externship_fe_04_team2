@@ -14,18 +14,25 @@ export function Layout() {
 
   const isLoggedIn = loginState === 'USER' || !!accessToken
 
-  // 초기 진입 시 refresh 시도
+  // 초기 진입 시 인증 상태 확인
   useEffect(() => {
     const initAuth = async () => {
       const currentToken = AuthStateStore.getState().accessToken
 
       if (!currentToken) {
+        // 토큰 없으면 refreshToken으로 발급 시도
         try {
           const { data } = await refreshAccessToken()
           AuthStateStore.getState().setAccessToken(data.access_token)
           LoginStateStore.getState().setLoginState('USER')
         } catch {
           LoginStateStore.getState().setLoginState('GUEST')
+        }
+      } else {
+        // 토큰 있으면 loginState 동기화
+        const currentLoginState = LoginStateStore.getState().loginState
+        if (currentLoginState !== 'USER') {
+          LoginStateStore.getState().setLoginState('USER')
         }
       }
     }
