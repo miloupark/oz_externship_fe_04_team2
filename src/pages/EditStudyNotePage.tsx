@@ -1,3 +1,4 @@
+import { getPresignedUrl, uploadToS3 } from '@/api'
 import { Button, Input } from '@/components/common'
 import { MarkdownEditor } from '@/components/markdown'
 import { FileUploader } from '@/components/studygroup-detail'
@@ -93,6 +94,27 @@ export function EditStudyNotePage() {
     }
   }
 
+  const handleImageUpload = async (file: File): Promise<string> => {
+    const fileExt = file.name.split('.').pop() ?? ''
+
+    try {
+      const { upload_url, file_url, headers } = await getPresignedUrl({
+        type: 'NOTE_IMAGE',
+        content_type: file.type,
+        file_name: file.name,
+        file_ext: fileExt,
+      })
+
+      await uploadToS3(upload_url, file, headers)
+
+      return file_url
+    } catch (error) {
+      console.error('이미지 업로드', error)
+      showToast.error('업로드 실패', '이미지 업로드에 실패했습니다.')
+      throw error
+    }
+  }
+
   const handleCancel = () => {
     navigate(-1)
   }
@@ -123,7 +145,15 @@ export function EditStudyNotePage() {
           <label className="text-custom-gray-700 text-sm font-medium">
             내용 <span className="text-red-500">*</span>
           </label>
-          <MarkdownEditor value={content} onChange={setContent} />
+          <MarkdownEditor
+            value={content}
+            onChange={setContent}
+            onImageUpload={handleImageUpload}
+          />
+          <span className="text-custom-gray-500 text-xs">
+            마크다운 문법을 사용할 수 있습니다. 이미지는 드래그 앤 드롭으로
+            첨부할 수 있습니다.
+          </span>
         </div>
 
         <div>

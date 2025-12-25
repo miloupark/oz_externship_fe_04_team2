@@ -85,7 +85,7 @@ export function DetailStudyNotePage() {
           </div>
           {isSummaryOpen && (
             <div className="text-custom-gray-900 bg-amber-50 p-4">
-              <p>{data.ai_summary}</p>
+              <Preview value={data.ai_summary ?? ''} />
             </div>
           )}
         </section>
