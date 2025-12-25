@@ -1,9 +1,10 @@
+import { refreshAccessToken } from '@/api/auth/login'
 import { ChatWidget } from '@/components/chat'
 import { Footer, Header } from '@/components/layout'
 import { ScrollToTop } from '@/hooks'
 import { LoginStateStore } from '@/store'
 import AuthStateStore from '@/store/authStateStore'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Outlet } from 'react-router'
 
 export function Layout() {
@@ -12,6 +13,25 @@ export function Layout() {
   const accessToken = AuthStateStore((state) => state.accessToken)
 
   const isLoggedIn = loginState === 'USER' || !!accessToken
+
+  // 초기 진입 시 refresh 시도
+  useEffect(() => {
+    const initAuth = async () => {
+      const currentToken = AuthStateStore.getState().accessToken
+
+      if (!currentToken) {
+        try {
+          const { data } = await refreshAccessToken()
+          AuthStateStore.getState().setAccessToken(data.access_token)
+          LoginStateStore.getState().setLoginState('USER')
+        } catch {
+          LoginStateStore.getState().setLoginState('GUEST')
+        }
+      }
+    }
+
+    initAuth()
+  }, [])
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center">

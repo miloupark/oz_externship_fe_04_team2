@@ -38,6 +38,7 @@ axiosInstance.interceptors.response.use(
         const newToken = data.access_token
 
         AuthStateStore.getState().setAccessToken(newToken)
+        LoginStateStore.getState().setLoginState('USER')
 
         originalRequest.headers = originalRequest.headers ?? {}
         originalRequest.headers.Authorization = `Bearer ${newToken}`
