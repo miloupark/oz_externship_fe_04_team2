@@ -25,6 +25,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^2.30.0",
+    "event-source-polyfill": "^1.0.31",
     "framer-motion": "^12.23.26",
     "lucide-react": "^0.515.0",
     "react": "^19.1.0",

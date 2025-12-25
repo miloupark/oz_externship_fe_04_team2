@@ -1,5 +1,14 @@
+import type { IconName } from '@/components/notification'
 import type { AlarmItem, NotificationApiItem } from '@/types'
-import { formatMonthDay } from '@/utils'
+
+// ISO 날짜 문자열을 "12월 1일" 형태로 포맷
+const formatDate = (isoString: string) => {
+  const date = new Date(isoString)
+  if (Number.isNaN(date.getTime())) return ''
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+  return `${month}월 ${day}일`
+}
 
 // 타입별 배경/텍스트 컬러 지정
 const typeToAccent = {
@@ -14,7 +23,7 @@ const typeToAccent = {
 } as const
 
 // 타입별 아이콘 지정
-const typeToIcon = {
+const typeToIcon: Record<string, IconName> = {
   STUDY_NOTE_CREATE: 'note',
   TODAY_SCHEDULE: 'today',
   UPCOMING_SCHEDULE: 'upcoming',
@@ -30,11 +39,12 @@ export const alarmMapper = (item: NotificationApiItem): AlarmItem => {
   const iconType = typeToIcon[item.type as keyof typeof typeToIcon] ?? 'apply'
 
   return {
-    id: String(item.id),
-    message: item.content,
-    date: formatMonthDay(item.created_at),
-    isRead: item.is_read,
+    id: String(item.id ?? crypto.randomUUID()),
+    message: item.content ?? '',
+    date: formatDate(item.created_at ?? ''),
+    isRead: !!item.is_read,
     accent,
     iconType,
+    backUrl: item.back_url_link ?? '',
   }
 }

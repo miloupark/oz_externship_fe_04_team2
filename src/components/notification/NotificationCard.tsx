@@ -1,13 +1,4 @@
-import {
-  CalendarCheck,
-  CalendarDays,
-  CalendarRange,
-  Check,
-  FileSignature,
-  UserPlus,
-  UsersRound,
-  X,
-} from 'lucide-react'
+import { getTypeIcon } from '@/components/notification/icons'
 import type { AccentKey, AlarmIconType } from '@/types'
 
 type NotificationCardProps = {
@@ -38,28 +29,7 @@ export function NotificationCard({
   iconType = 'apply',
   onClick,
 }: NotificationCardProps) {
-  const icon = (() => {
-    switch (iconType) {
-      case 'apply':
-        return <UserPlus size={16} />
-      case 'approved':
-        return <Check size={16} />
-      case 'rejected':
-        return <X size={16} />
-      case 'newMember':
-        return <UsersRound size={16} />
-      case 'studyEnd':
-        return <CalendarCheck size={16} />
-      case 'upcoming':
-        return <CalendarRange size={16} />
-      case 'today':
-        return <CalendarDays size={16} />
-      case 'note':
-        return <FileSignature size={16} />
-      default:
-        return <UserPlus size={16} />
-    }
-  })()
+  const icon = getTypeIcon(iconType)
 
   return (
     <div

@@ -1,15 +1,30 @@
-import { isAxiosError } from 'axios'
-import { alarmMapper } from '@/constants/notification'
-import type { AlarmItem, NotificationListResponse } from '@/types'
-import { useEffect, useState } from 'react'
-import { useCursorInfiniteQuery } from '@/hooks/notification'
 import { axiosInstance } from '@/api'
+import { alarmMapper } from '@/constants'
+import { useCursorInfiniteQuery } from '@/hooks/notification/useCursorInfiniteQuery'
+import type { AlarmItem, NotificationListResponse } from '@/types'
 import { useQueryClient } from '@tanstack/react-query'
+import { isAxiosError } from 'axios'
+import { useEffect, useState } from 'react'
 
 type FilterKey = 'all' | 'unread' | 'read'
 
+type UseNotificationsReturn = {
+  alarms: AlarmItem[]
+  errorMessage: string | null
+  totalCount: number
+  unreadCount: number
+  readCount: number
+  fetchNextPage: ReturnType<typeof useCursorInfiniteQuery>['fetchNextPage']
+  hasNextPage: ReturnType<typeof useCursorInfiniteQuery>['hasNextPage']
+  isFetchingNextPage: ReturnType<
+    typeof useCursorInfiniteQuery
+  >['isFetchingNextPage']
+  isLoading: ReturnType<typeof useCursorInfiniteQuery>['isLoading']
+  refetch: ReturnType<typeof useCursorInfiniteQuery>['refetch']
+}
+
 // 커서 기반 알림 조회 훅
-export const useNotifications = (filter: FilterKey) => {
+export const useNotifications = (filter: FilterKey): UseNotificationsReturn => {
   const query = useCursorInfiniteQuery<AlarmItem>({
     queryKey: ['notifications', filter],
     queryFn: async (cursorUrl) => {
@@ -18,7 +33,7 @@ export const useNotifications = (filter: FilterKey) => {
         const { data } = cursorUrl
           ? await axiosInstance.get<NotificationListResponse>(cursorUrl)
           : await axiosInstance.get<NotificationListResponse>(
-              '/v1/notifications',
+              '/api/v1/notifications',
               {
                 params: {
                   page_size: 10,

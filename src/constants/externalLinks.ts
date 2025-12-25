@@ -4,5 +4,5 @@ export const EXTERNAL_LINKS = {
   LOGIN: 'https://account.ozcoding.site/login',
   SIGNUP: 'https://account.ozcoding.site/signup',
   LECTURES: 'https://learn.ozcoding.site/courses',
-  RECRUITMENT: 'https://learn.ozcoding.site/recruitment',
+  RECRUITMENT: 'https://learn.ozcoding.site/recruitments',
 } as const
