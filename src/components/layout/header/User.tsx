@@ -1,10 +1,11 @@
 import { UserModal } from '@/components/layout'
 import { EXTERNAL_LINKS } from '@/constants'
 import { useIsDesktop, useUserData } from '@/hooks'
-import { BellIcon, ChevronDown, ChevronUp, UserRound } from 'lucide-react'
+import { BellIcon, ChevronDown, ChevronUp } from 'lucide-react'
 import { useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import NotificationModal from '@/components/notification/NotificationModal'
+import defaultImg from '@/assets/images/defaultProfileImg.svg'
 
 export function User() {
   const [isUserModalOpen, setIsUserModalOpen] = useState(false)
@@ -94,19 +95,19 @@ export function User() {
         className="relative ml-4 flex cursor-pointer items-center gap-2"
         onClick={handleUserModal}
       >
-        <div className="flex h-8 w-8 items-center justify-center rounded-full">
-          {data?.profile_img_url ? (
-            <img
-              src={data.profile_img_url}
-              alt="profileIcon"
-              className="h-5 w-5 rounded-full"
-            />
-          ) : (
-            <UserRound className="h-5 w-5" />
-          )}
+        <div className="h-7 w-7 overflow-hidden rounded-full sm:h-8 sm:w-8">
+          <img
+            src={data?.profile_img_url || defaultImg}
+            alt="profileIcon"
+            className="h-full w-full object-cover"
+          />
         </div>
         <div className="text-primary-600 text-base">{data?.name}</div>
-        {isUserModalOpen ? <ChevronUp /> : <ChevronDown />}
+        {isUserModalOpen ? (
+          <ChevronUp className="hidden md:block md:h-4 md:w-4" />
+        ) : (
+          <ChevronDown className="hidden md:block md:h-4 md:w-4" />
+        )}
         {isUserModalOpen && <UserModal />}
         {/* 추후 목업데이터로 먼저 구현예정 */}
       </div>

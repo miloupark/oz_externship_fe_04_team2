@@ -21,7 +21,6 @@ export function Header({ isSideBarOpen, setIsSideBarOpen }: HeaderProps) {
   }
 
   // API 연결 시 임시 버튼
-
   const handleDevLogin = async () => {
     const token = await devLogin(
       import.meta.env.VITE_DEV_EMAIL!,
